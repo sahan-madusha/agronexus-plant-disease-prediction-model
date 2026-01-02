@@ -1,4 +1,4 @@
-name: Deploy Agronexus Landing Page
+name: Deploy Agronexus FastAPI Model
 
 on:
   push:
@@ -23,18 +23,12 @@ jobs:
 
       - name: Deploy to EC2
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
+          ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
             set -e
-
             cd ${{ secrets.EC2_PATH }}
-
-            export NODE_ENV=production
-            export NVM_DIR="$HOME/.nvm"
-            source "$NVM_DIR/nvm.sh"
-
             git pull origin main
-            npm install
-            npm run build
-
-          pm2 restart agronexus || pm2 start "NODE_OPTIONS='--max-old-space-size=512' npm start" --name agronexus
+            source venv/bin/activate
+            pip install --upgrade pip
+            pip install -r requirements.txt
+            pm2 restart agronexus || pm2 start "gunicorn -w 4 -k uvicorn.workers.UvicornWorker main:app" --name agronexus
           EOF
