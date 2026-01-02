@@ -1,0 +1,9 @@
+tensorflow>=2.12
+matplotlib
+numpy
+kagglehub
+fastapi
+uvicorn
+python-multipart
+pillow
+tensorflow-serving-api==2.5.0

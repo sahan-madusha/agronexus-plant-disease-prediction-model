@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  api:
+    build: .
+    container_name: pland-disease-api
+    ports:
+      - "8000:8000"
+    restart: always
+    # Limit memory to prevent the whole EC2 instance from freezing
+    deploy:
+      resources:
+        limits:
+          memory: 800M
