@@ -9,16 +9,24 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4  # Updated to v4 for better performance
+
       - name: Deploy to EC2
-        uses: appleboy/ssh-action@v0.1.6
+        uses: appleboy/ssh-action@v1.0.3  # Updated version
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
-          key: "${{ secrets.EC2_SSH_KEY }}"
+          # The pipe symbol | is the most reliable way to pass multi-line keys
+          key: |
+            ${{ secrets.EC2_SSH_KEY }}
+          port: 22
           script: |
             cd ~/agronexus-plant-disease-prediction-model
             git pull origin main
+            
+            # Use the venv pip to avoid system conflicts
             ./venv/bin/pip install --no-cache-dir -r requirements.txt
+            
+            # Restart services
             sudo systemctl restart agronexus
             sudo systemctl restart nginx
