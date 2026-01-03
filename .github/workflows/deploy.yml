@@ -1,31 +1,25 @@
-name: Deploy Model to EC2
+name: Agronexus Native Deployment
 
 on:
   push:
-    branches: [main]
+    branches: [ main ]
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4  # Updated to v4 for better performance
+      - name: Checkout Code
+        uses: actions/checkout@v3
 
-      - name: Deploy to EC2
-        uses: appleboy/ssh-action@v1.0.3  # Updated version
+      - name: Deploy to EC2 via SSH
+        uses: appleboy/ssh-action@master
         with:
-          host: "107.21.188.137"
-          username: ubuntu
-          # The pipe symbol | is the most reliable way to pass multi-line keys
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
-          port: 22
           script: |
-            cd ~/agronexus-plant-disease-prediction-model
+            cd /home/ubuntu/agronexus-plant-disease-prediction-model
             git pull origin main
-            
-            # Use the venv pip to avoid system conflicts
-            ./venv/bin/pip install --no-cache-dir -r requirements.txt
-            
-            # Restart services
+            source venv/bin/activate
+            pip install -r requirements.txt
             sudo systemctl restart agronexus
-            sudo systemctl restart nginx
