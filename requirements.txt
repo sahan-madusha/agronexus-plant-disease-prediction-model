@@ -4,6 +4,7 @@ numpy
 kagglehub
 fastapi
 uvicorn
+gunicorn
 python-multipart
 pillow
 tensorflow-serving-api==2.5.0
