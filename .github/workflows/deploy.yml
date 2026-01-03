@@ -17,8 +17,7 @@ jobs:
           host: "107.21.188.137"
           username: ubuntu
           # The pipe symbol | is the most reliable way to pass multi-line keys
-          key: |
-            ${{ secrets.EC2_SSH_KEY }}
+          key: ${{ secrets.EC2_SSH_KEY }}
           port: 22
           script: |
             cd ~/agronexus-plant-disease-prediction-model
