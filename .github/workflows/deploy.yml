@@ -14,7 +14,7 @@ jobs:
       - name: Deploy to EC2
         uses: appleboy/ssh-action@v1.0.3  # Updated version
         with:
-          host: ${{ secrets.EC2_HOST }}
+          host: "107.21.188.137"
           username: ubuntu
           # The pipe symbol | is the most reliable way to pass multi-line keys
           key: |
