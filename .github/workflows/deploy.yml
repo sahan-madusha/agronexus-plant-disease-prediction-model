@@ -20,8 +20,7 @@ jobs:
           script: |
             cd ~/agronexus-plant-disease-prediction-model
             git pull origin main
-            docker build -t agronexus-model .
-            docker stop fastapi-container || true
-            docker rm fastapi-container || true
-            docker run -d -p 8000:8000 --name fastapi-container agronexus-model
+            source venv/bin/activate
+            pip install -r requirements.txt
+            sudo systemctl restart agronexus
             sudo systemctl restart nginx
